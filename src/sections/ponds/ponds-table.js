@@ -59,28 +59,33 @@ export const PondsTable = (props) => {
                   Name
                 </TableCell>
                 <TableCell>
-                  Email
+                  Address
                 </TableCell>
                 <TableCell>
-                  Location
+                  City
                 </TableCell>
                 <TableCell>
-                  Phone
+                  Seed Date
                 </TableCell>
                 <TableCell>
-                  Signed Up
+                  Status
+                </TableCell>
+                <TableCell>
+                  Filled
+                </TableCell>
+                <TableCell>
+                  Device ID
                 </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
-              {items.map((customer) => {
-                const isSelected = selected.includes(customer.id);
-                const createdAt = format(customer.createdAt, 'dd/MM/yyyy');
-
+              {items.map((pond) => {
+                const isSelected = selected.includes(pond.id);
+                const createdAt = new Date(pond.seedDate).toLocaleDateString();
                 return (
                   <TableRow
                     hover
-                    key={customer.id}
+                    key={pond.id}
                     selected={isSelected}
                   >
                     <TableCell padding="checkbox">
@@ -88,9 +93,9 @@ export const PondsTable = (props) => {
                         checked={isSelected}
                         onChange={(event) => {
                           if (event.target.checked) {
-                            onSelectOne?.(customer.id);
+                            onSelectOne?.(pond.id);
                           } else {
-                            onDeselectOne?.(customer.id);
+                            onDeselectOne?.(pond.id);
                           }
                         }}
                       />
@@ -101,25 +106,28 @@ export const PondsTable = (props) => {
                         direction="row"
                         spacing={2}
                       >
-                        <Avatar src={customer.avatar}>
-                          {getInitials(customer.name)}
-                        </Avatar>
                         <Typography variant="subtitle2">
-                          {customer.name}
+                          {pond.name}
                         </Typography>
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {customer.email}
+                      {pond.address}
                     </TableCell>
                     <TableCell>
-                      {customer.address.city}, {customer.address.state}, {customer.address.country}
-                    </TableCell>
-                    <TableCell>
-                      {customer.phone}
+                      {pond.city}
                     </TableCell>
                     <TableCell>
                       {createdAt}
+                    </TableCell>
+                    <TableCell>
+                      {pond.status}
+                    </TableCell>
+                    <TableCell>
+                      {pond.isFilled}
+                    </TableCell>
+                    <TableCell>
+                      {pond.deviceId}
                     </TableCell>
                   </TableRow>
                 );
