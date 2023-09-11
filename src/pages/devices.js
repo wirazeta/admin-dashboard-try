@@ -7,22 +7,22 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { MastersTable } from 'src/sections/masters/masters-table';
-// import { MastersSearch } from 'src/sections/masters/masters-search';
-import { MastersAdd } from 'src/sections/masters/masters-add';
+import { DevicesTable } from 'src/sections/devices/devices-table';
+// import { MastersSearch } from 'src/sections/devices/devices-search';
+import { DevicesAdd } from 'src/sections/devices/devices-add';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { instance } from 'src/hooks/use-api';
 
 let data = [];
 
 instance({
-  url: '/masters',
+  url: '/devices',
   method: 'get'
 }).then((response) => {
   data = response.data;
 });
 
-const useMasters = (page, rowsPerPage) => {
+const useDevices = (page, rowsPerPage) => {
   return useMemo(
     () => {
       return applyPagination(data, page, rowsPerPage);
@@ -31,12 +31,12 @@ const useMasters = (page, rowsPerPage) => {
   );
 };
 
-const useMasterIds = (masters) => {
+const useDevicesIds = (devices) => {
   return useMemo(
     () => {
-      return masters.map((master) => master.id);
+      return devices.map((device) => device.id);
     },
-    [masters]
+    [devices]
   );
 };
 
@@ -44,9 +44,9 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const masters = useMasters(page, rowsPerPage);
-  const mastersIds = useMasterIds(masters);
-  const mastersSelection = useSelection(mastersIds);
+  const devices = useDevices(page, rowsPerPage);
+  const devicesIds = useDevicesIds(devices);
+  const devicesSelection = useSelection(devicesIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -70,7 +70,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Masters | Devias Kit
+          Devices | Devias Kit
         </title>
       </Head>
       <Box
@@ -89,7 +89,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Masters
+                  Devices
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -132,19 +132,19 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <MastersAdd setOpen={openModal}/>
-            <MastersTable
+            <DevicesAdd setOpen={openModal}/>
+            <DevicesTable
               count={data.length}
-              items={masters}
-              onDeselectAll={mastersSelection.handleDeselectAll}
-              onDeselectOne={mastersSelection.handleDeselectOne}
+              items={data}
+              devices={devices.handleDeselectAll}
+              onDeselectOne={devicesSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={mastersSelection.handleSelectAll}
-              onSelectOne={mastersSelection.handleSelectOne}
+              onSelectAll={devicesSelection.handleSelectAll}
+              onSelectOne={devicesSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={mastersSelection.selected}
+              selected={devicesSelection.selected}
             />
           </Stack>
         </Container>

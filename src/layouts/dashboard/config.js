@@ -27,6 +27,10 @@ export const items = [
     path: '/masters'
   },
   {
+    title: 'Devices',
+    path: '/devices'
+  },
+  {
     title: 'Companies',
     path: '/companies',
     icon: (
