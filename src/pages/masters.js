@@ -7,16 +7,16 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { PondsTable } from 'src/sections/ponds/ponds-table';
-import { PondsSearch } from 'src/sections/ponds/ponds-search';
-import { PondsAdd } from 'src/sections/ponds/ponds-add';
+import { MastersTable } from 'src/sections/masters/masters-table';
+// import { MastersSearch } from 'src/sections/masters/masters-search';
+import { MastersAdd } from 'src/sections/masters/masters-add';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { instance } from 'src/hooks/use-api';
 
 let data = [];
 
 instance({
-  url: '/ponds',
+  url: '/masters',
   method: 'get'
 }).then((response) => {
   data = response.data;
@@ -31,12 +31,12 @@ const useCustomers = (page, rowsPerPage) => {
   );
 };
 
-const useCustomerIds = (customers) => {
+const useCustomerIds = (masters) => {
   return useMemo(
     () => {
-      return customers.map((customer) => customer.id);
+      return masters.map((master) => master.id);
     },
-    [customers]
+    [masters]
   );
 };
 
@@ -44,9 +44,9 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
+  const masters = useCustomers(page, rowsPerPage);
+  const mastersIds = useCustomerIds(masters);
+  const mastersSelection = useSelection(mastersIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -70,7 +70,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Ponds | Devias Kit
+          Masters | Devias Kit
         </title>
       </Head>
       <Box
@@ -89,7 +89,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Ponds
+                  Masters
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -132,20 +132,19 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <PondsAdd setOpen={openModal}/>
-            <PondsSearch />
-            <PondsTable
+            <MastersAdd setOpen={openModal}/>
+            <MastersTable
               count={data.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
+              items={masters}
+              onDeselectAll={mastersSelection.handleDeselectAll}
+              onDeselectOne={mastersSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
+              onSelectAll={mastersSelection.handleSelectAll}
+              onSelectOne={mastersSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
+              selected={mastersSelection.selected}
             />
           </Stack>
         </Container>

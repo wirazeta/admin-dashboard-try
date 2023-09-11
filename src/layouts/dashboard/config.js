@@ -21,11 +21,10 @@ export const items = [
   {
     title: 'Ponds',
     path: '/ponds',
-    icon: (
-      <SvgIcon fontSize="small">
-        <UsersIcon />
-      </SvgIcon>
-    )
+  },
+  {
+    title: 'Masters',
+    path: '/masters'
   },
   {
     title: 'Companies',

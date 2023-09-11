@@ -23,13 +23,13 @@ const style = {
     p: 4,
 };
 
-export const PondsAdd = (props) => {
+export const MastersAdd = (props) => {
     const [data, setData] = useState({});
-    const [closeModal, setCloseModal] = useState(true);
-    const [file, setFile] = useState(undefined);
-    const handleClose = () => {
-        setCloseModal(false);
-    }
+    // const [closeModal, setCloseModal] = useState(true);
+    // const [file, setFile] = useState(undefined);
+    // const handleClose = () => {
+    //     setCloseModal(false);
+    // }
     const handleChange = (event) => {
         const { name, value } = event.target;
         setData(prevState => ({
@@ -38,30 +38,15 @@ export const PondsAdd = (props) => {
         }));
         console.log(data);
     }
-    
-    const handleFile = (event) => {
-        setFile(event.target.files[0]);
-    }
 
     const handleSubmit = () => {
 
-        const formData = new FormData();
-
-        formData.append('name', data.name);
-        formData.append('address', data.address);
-        formData.append('city', data.city);
-        formData.append('deviceId', data.deviceId);
-        formData.append('file', file);
-
-        console.log(formData);
-
         axios({
             method: 'post',
-            url: "http://www.devel-filkomub.site",
-            data: formData,
+            url: "http://www.devel-filkomub.site/masters",
+            data: data,
             headers: {
                 "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
-                "Content-Type": "multipart/form-data"
             }
         }).then((response) => {
             console.log(response);
@@ -90,7 +75,19 @@ export const PondsAdd = (props) => {
             >
                 <Box sx={style}>
                     <form autoComplete='off' onSubmit={handleSubmit}>
-                        <h2>Add Pond</h2>
+                        <h2>Add Master</h2>
+                        <TextField
+                            name="id"
+                            label="Master ID"
+                            onChange={handleChange}
+                            required
+                            variant='outlined'
+                            color='secondary'
+                            type='text'
+                            sx={{mb: 3}}
+                            fullWidth
+                            value={data.id}
+                        />
                         <TextField
                             name="name"
                             label="Name"
@@ -104,8 +101,8 @@ export const PondsAdd = (props) => {
                             value={data.name}
                         />
                         <TextField
-                            name="address"
-                            label="Address"
+                            name="simNum"
+                            label="Sim Number"
                             onChange={handleChange}
                             required
                             variant='outlined'
@@ -113,37 +110,7 @@ export const PondsAdd = (props) => {
                             type='text'
                             sx={{mb: 3}}
                             fullWidth
-                            value={data.address}
-                        /><TextField
-                            name="city"
-                            label="City"
-                            onChange={handleChange}
-                            required
-                            variant='outlined'
-                            color='secondary'
-                            type='text'
-                            sx={{mb: 3}}
-                            fullWidth
-                            value={data.city}
-                        /><TextField
-                            name="deviceId"
-                            label="Device ID"
-                            onChange={handleChange}
-                            required
-                            variant='outlined'
-                            color='secondary'
-                            type='text'
-                            sx={{mb: 3}}
-                            fullWidth
-                            value={data.deviceId}
-                        />
-                        <input 
-                            id='file' 
-                            type='file' 
-                            name='file'
-                            onChange={handleFile}
-                            required
-                            accept='image/png, image/jpg'
+                            value={data.simNum}
                         />
                         <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
                     </form>
@@ -153,6 +120,6 @@ export const PondsAdd = (props) => {
     )
 }
 
-PondsAdd.propTypes = {
+MastersAdd.propTypes = {
     setOpen: PropTypes.bool,
 };
