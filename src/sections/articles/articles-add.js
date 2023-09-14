@@ -8,8 +8,7 @@ import{
     TextField,
     Modal
 } from '@mui/material';
-// import { instance } from 'src/hooks/use-api';
-const axios = require('axios');
+import { instance } from 'src/hooks/use-api';
 
 const style = {
     position: 'absolute',
@@ -23,11 +22,10 @@ const style = {
     p: 4,
 };
 
-export const ArticlesAdd = (props) => {
-    const [data, setData] = useState({});
-    const [file, setFile] = useState(undefined);
+export const ArticlesAdd = ({isOpen, setOpen}) => {
+    const [data, setData] = useState({title: "", url: "", image: ""});
     const handleClose = () => {
-        setCloseModal(false);
+        setOpen(false);
     }
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -37,60 +35,32 @@ export const ArticlesAdd = (props) => {
         }));
         console.log(data);
     }
-    
-    const handleFile = (event) => {
-        setFile(event.target.files[0]);
-    }
 
     const handleSubmit = () => {
 
-        const formData = new FormData();
-
-        formData.append('title', data.title);
-        formData.append('')
-        formData.append('file', file);
-
-        console.log(formData);
-
-        axios({
-            method: 'post',
-            url: "http://www.devel-filkomub.site",
-            data: formData,
-            headers: {
-                "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
-                "Content-Type": "multipart/form-data"
-            }
+        instance({
+            url: '/articles',
+            method:'post',
+            data: data,
         }).then((response) => {
             console.log(response);
-        }).catch((error) => {
-            console.error.log(error);
-        })
-
-        // instance({
-        //     url: '/ponds',
-        //     method:'post',
-        //     body: formData,
-        //     headers: {
-        //         "Content-Type": "multipart/form-data"
-        //     },
-        // }).then((response) => {
-        //     console.log(response);
-        // });
+        });
     };
 
     return(
         <div>
             <Modal
-                open={props.setOpen}
+                open={isOpen}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <form autoComplete='off' onSubmit={handleSubmit}>
+                    <form autoComplete='off'>
                         <h2>Add Articles</h2>
                         <TextField
-                            name="name"
-                            label="Name"
+                            name="title"
+                            label="Title"
                             onChange={handleChange}
                             required
                             variant='outlined'
@@ -98,11 +68,11 @@ export const ArticlesAdd = (props) => {
                             type='text'
                             sx={{mb: 3}}
                             fullWidth
-                            value={data.name}
+                            value={data.title}
                         />
                         <TextField
-                            name="address"
-                            label="Address"
+                            name="url"
+                            label="URL"
                             onChange={handleChange}
                             required
                             variant='outlined'
@@ -110,10 +80,10 @@ export const ArticlesAdd = (props) => {
                             type='text'
                             sx={{mb: 3}}
                             fullWidth
-                            value={data.address}
+                            value={data.url}
                         /><TextField
-                            name="city"
-                            label="City"
+                            name="image"
+                            label="Image"
                             onChange={handleChange}
                             required
                             variant='outlined'
@@ -121,35 +91,12 @@ export const ArticlesAdd = (props) => {
                             type='text'
                             sx={{mb: 3}}
                             fullWidth
-                            value={data.city}
-                        /><TextField
-                            name="deviceId"
-                            label="Device ID"
-                            onChange={handleChange}
-                            required
-                            variant='outlined'
-                            color='secondary'
-                            type='text'
-                            sx={{mb: 3}}
-                            fullWidth
-                            value={data.deviceId}
+                            value={data.image}
                         />
-                        <input 
-                            id='file' 
-                            type='file' 
-                            name='file'
-                            onChange={handleFile}
-                            required
-                            accept='image/png, image/jpg'
-                        />
-                        <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Create</Button>
                     </form>
                 </Box>
             </Modal>
         </div>
     )
 }
-
-ArticlesAdd.propTypes = {
-    setOpen: PropTypes.bool,
-};

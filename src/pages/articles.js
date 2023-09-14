@@ -132,7 +132,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <ArticlesAdd setOpen={openModal}/>
+            <ArticlesAdd isOpen={openModal} setOpen={setOpenModal}/>
             <ArticlesSearch />
             <ArticlesTable
               count={data.length}
