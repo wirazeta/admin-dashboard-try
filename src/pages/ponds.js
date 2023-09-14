@@ -132,7 +132,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <PondsAdd setOpen={openModal}/>
+            <PondsAdd isOpen={openModal} setOpen={setOpenModal}/>
             <PondsSearch />
             <PondsTable
               count={data.length}

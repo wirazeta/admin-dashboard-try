@@ -8,8 +8,8 @@ import{
     TextField,
     Modal
 } from '@mui/material';
-import { instance } from 'src/hooks/use-api';
-// const axios = require('axios');
+// import { instance } from 'src/hooks/use-api';
+const axios = require('axios');
 
 const style = {
     position: 'absolute',
@@ -23,8 +23,12 @@ const style = {
     p: 4,
 };
 
-export const DevicesAdd = (props) => {
+export const ArticlesAdd = (props) => {
     const [data, setData] = useState({});
+    const [file, setFile] = useState(undefined);
+    const handleClose = () => {
+        setCloseModal(false);
+    }
     const handleChange = (event) => {
         const { name, value } = event.target;
         setData(prevState => ({
@@ -33,18 +37,45 @@ export const DevicesAdd = (props) => {
         }));
         console.log(data);
     }
+    
+    const handleFile = (event) => {
+        setFile(event.target.files[0]);
+    }
 
     const handleSubmit = () => {
-        console.log(data);
-        instance({
+
+        const formData = new FormData();
+
+        formData.append('title', data.title);
+        formData.append('')
+        formData.append('file', file);
+
+        console.log(formData);
+
+        axios({
             method: 'post',
-            url: "/devices",
-            data: data,
+            url: "http://www.devel-filkomub.site",
+            data: formData,
+            headers: {
+                "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
+                "Content-Type": "multipart/form-data"
+            }
         }).then((response) => {
             console.log(response);
         }).catch((error) => {
             console.error.log(error);
-        });
+        })
+
+        // instance({
+        //     url: '/ponds',
+        //     method:'post',
+        //     body: formData,
+        //     headers: {
+        //         "Content-Type": "multipart/form-data"
+        //     },
+        // }).then((response) => {
+        //     console.log(response);
+        // });
     };
 
     return(
@@ -56,19 +87,7 @@ export const DevicesAdd = (props) => {
             >
                 <Box sx={style}>
                     <form autoComplete='off' onSubmit={handleSubmit}>
-                        <h2>Add Device</h2>
-                        <TextField
-                            name="id"
-                            label="Device ID"
-                            onChange={handleChange}
-                            required
-                            variant='outlined'
-                            color='secondary'
-                            type='text'
-                            sx={{mb: 3}}
-                            fullWidth
-                            value={data.id}
-                        />
+                        <h2>Add Articles</h2>
                         <TextField
                             name="name"
                             label="Name"
@@ -82,8 +101,8 @@ export const DevicesAdd = (props) => {
                             value={data.name}
                         />
                         <TextField
-                            name="masterId"
-                            label="Master ID"
+                            name="address"
+                            label="Address"
                             onChange={handleChange}
                             required
                             variant='outlined'
@@ -91,7 +110,37 @@ export const DevicesAdd = (props) => {
                             type='text'
                             sx={{mb: 3}}
                             fullWidth
-                            value={data.masterId}
+                            value={data.address}
+                        /><TextField
+                            name="city"
+                            label="City"
+                            onChange={handleChange}
+                            required
+                            variant='outlined'
+                            color='secondary'
+                            type='text'
+                            sx={{mb: 3}}
+                            fullWidth
+                            value={data.city}
+                        /><TextField
+                            name="deviceId"
+                            label="Device ID"
+                            onChange={handleChange}
+                            required
+                            variant='outlined'
+                            color='secondary'
+                            type='text'
+                            sx={{mb: 3}}
+                            fullWidth
+                            value={data.deviceId}
+                        />
+                        <input 
+                            id='file' 
+                            type='file' 
+                            name='file'
+                            onChange={handleFile}
+                            required
+                            accept='image/png, image/jpg'
                         />
                         <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
                     </form>
@@ -101,6 +150,6 @@ export const DevicesAdd = (props) => {
     )
 }
 
-DevicesAdd.propTypes = {
+ArticlesAdd.propTypes = {
     setOpen: PropTypes.bool,
 };

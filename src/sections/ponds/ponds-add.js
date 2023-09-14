@@ -23,13 +23,10 @@ const style = {
     p: 4,
 };
 
-export const PondsAdd = (props) => {
-    const [data, setData] = useState({});
-    const [closeModal, setCloseModal] = useState(true);
-    const [file, setFile] = useState(undefined);
-    const handleClose = () => {
-        setCloseModal(false);
-    }
+export const PondsAdd = ({ isOpen, setOpen }) => {
+    const [data, setData] = useState({name:"", address:"", city:"", deviceId:null});
+    const [file, setFile] = useState({});
+
     const handleChange = (event) => {
         const { name, value } = event.target;
         setData(prevState => ({
@@ -40,24 +37,33 @@ export const PondsAdd = (props) => {
     }
     
     const handleFile = (event) => {
+        console.log(event.target.files[0]);
         setFile(event.target.files[0]);
     }
 
-    const handleSubmit = () => {
+    const handleClose = () => {
+        setOpen(false);
+    }
+
+    const handleSubmit = async () => {
 
         const formData = new FormData();
 
         formData.append('name', data.name);
         formData.append('address', data.address);
         formData.append('city', data.city);
-        formData.append('deviceId', data.deviceId);
+        if(data.deviceId !== null){
+            formData.append('deviceId', data.deviceId);
+        }
         formData.append('file', file);
 
         console.log(formData);
 
-        axios({
+        console.log(data);
+
+        await axios({
             method: 'post',
-            url: "http://www.devel-filkomub.site",
+            url: "http://www.devel-filkomub.site/ponds",
             data: formData,
             headers: {
                 "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
@@ -66,30 +72,21 @@ export const PondsAdd = (props) => {
         }).then((response) => {
             console.log(response);
         }).catch((error) => {
-            console.error.log(error);
-        })
-
-        // instance({
-        //     url: '/ponds',
-        //     method:'post',
-        //     body: formData,
-        //     headers: {
-        //         "Content-Type": "multipart/form-data"
-        //     },
-        // }).then((response) => {
-        //     console.log(response);
-        // });
+            console.error(error);
+        });
+        console.log(axios);
     };
 
     return(
         <div>
             <Modal
-                open={props.setOpen}
+                open={isOpen}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <form autoComplete='off' onSubmit={handleSubmit}>
+                    <form autoComplete='off'>
                         <h2>Add Pond</h2>
                         <TextField
                             name="name"
@@ -125,11 +122,11 @@ export const PondsAdd = (props) => {
                             sx={{mb: 3}}
                             fullWidth
                             value={data.city}
-                        /><TextField
+                        />
+                        <TextField
                             name="deviceId"
                             label="Device ID"
                             onChange={handleChange}
-                            required
                             variant='outlined'
                             color='secondary'
                             type='text'
@@ -145,14 +142,10 @@ export const PondsAdd = (props) => {
                             required
                             accept='image/png, image/jpg'
                         />
-                        <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Create</Button>
                     </form>
                 </Box>
             </Modal>
         </div>
     )
 }
-
-PondsAdd.propTypes = {
-    setOpen: PropTypes.bool,
-};

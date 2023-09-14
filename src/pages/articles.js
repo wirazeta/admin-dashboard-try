@@ -7,22 +7,22 @@ import PlusIcon from '@heroicons/react/24/solid/PlusIcon';
 import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/material';
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
-import { DevicesTable } from 'src/sections/devices/devices-table';
-// import { MastersSearch } from 'src/sections/devices/devices-search';
-import { DevicesAdd } from 'src/sections/devices/devices-add';
+import { ArticlesTable } from 'src/sections/articles/articles-table';
+import { ArticlesSearch } from 'src/sections/articles/articles-search';
+import { ArticlesAdd } from 'src/sections/articles/articles-add';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { instance } from 'src/hooks/use-api';
 
 let data = [];
 
 instance({
-  url: '/devices',
+  url: '/articles',
   method: 'get'
 }).then((response) => {
   data = response.data;
 });
 
-const useDevices = (page, rowsPerPage) => {
+const useArticles = (page, rowsPerPage) => {
   return useMemo(
     () => {
       return applyPagination(data, page, rowsPerPage);
@@ -31,12 +31,12 @@ const useDevices = (page, rowsPerPage) => {
   );
 };
 
-const useDevicesIds = (devices) => {
+const useArticleIds = (articles) => {
   return useMemo(
     () => {
-      return devices.map((device) => device.id);
+      return articles.map((article) => article.id);
     },
-    [devices]
+    [articles]
   );
 };
 
@@ -44,9 +44,9 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const devices = useDevices(page, rowsPerPage);
-  const devicesIds = useDevicesIds(devices);
-  const devicesSelection = useSelection(devicesIds);
+  const articles = useArticles(page, rowsPerPage);
+  const articlesIds = useArticleIds(articles);
+  const articlesSelection = useSelection(articlesIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -70,7 +70,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Devices | Devias Kit
+          Ponds | Devias Kit
         </title>
       </Head>
       <Box
@@ -89,7 +89,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Devices
+                  Ponds
                 </Typography>
                 <Stack
                   alignItems="center"
@@ -132,20 +132,20 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <DevicesAdd setOpen={openModal}/>
-            <DevicesTable
+            <ArticlesAdd setOpen={openModal}/>
+            <ArticlesSearch />
+            <ArticlesTable
               count={data.length}
-              items={data}
-              devices={devices.handleDeselectAll}
-              onDeselectAll={devicesSelection.handleDeselectAll}
-              onDeselectOne={devicesSelection.handleDeselectOne}
+              items={articles}
+              onDeselectAll={articlesSelection.handleDeselectAll}
+              onDeselectOne={articlesSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={devicesSelection.handleSelectAll}
-              onSelectOne={devicesSelection.handleSelectOne}
+              onSelectAll={articlesSelection.handleSelectAll}
+              onSelectOne={articlesSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={devicesSelection.selected}
+              selected={articlesSelection.selected}
             />
           </Stack>
         </Container>

@@ -31,6 +31,10 @@ export const items = [
     path: '/devices'
   },
   {
+    title: 'Articles',
+    path: '/articles'
+  },
+  {
     title: 'Companies',
     path: '/companies',
     icon: (
