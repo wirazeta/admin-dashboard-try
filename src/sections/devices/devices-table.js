@@ -83,7 +83,7 @@ export const DevicesTable = (props) => {
                   TDS High
                 </TableCell>
                 <TableCell>
-                  TDS Low
+                  TDS High
                 </TableCell>
                 <TableCell>
                   Turbidities High

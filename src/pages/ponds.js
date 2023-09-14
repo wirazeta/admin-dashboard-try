@@ -22,7 +22,7 @@ instance({
   data = response.data;
 });
 
-const useCustomers = (page, rowsPerPage) => {
+const usePonds = (page, rowsPerPage) => {
   return useMemo(
     () => {
       return applyPagination(data, page, rowsPerPage);
@@ -31,12 +31,12 @@ const useCustomers = (page, rowsPerPage) => {
   );
 };
 
-const useCustomerIds = (customers) => {
+const usePondIds = (ponds) => {
   return useMemo(
     () => {
-      return customers.map((customer) => customer.id);
+      return ponds.map((pond) => pond.id);
     },
-    [customers]
+    [ponds]
   );
 };
 
@@ -44,9 +44,9 @@ const Page = () => {
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const customers = useCustomers(page, rowsPerPage);
-  const customersIds = useCustomerIds(customers);
-  const customersSelection = useSelection(customersIds);
+  const ponds = usePonds(page, rowsPerPage);
+  const pondsIds = usePondIds(ponds);
+  const pondsSelection = useSelection(pondsIds);
 
   const handlePageChange = useCallback(
     (event, value) => {
@@ -136,16 +136,16 @@ const Page = () => {
             <PondsSearch />
             <PondsTable
               count={data.length}
-              items={customers}
-              onDeselectAll={customersSelection.handleDeselectAll}
-              onDeselectOne={customersSelection.handleDeselectOne}
+              items={ponds}
+              onDeselectAll={pondsSelection.handleDeselectAll}
+              onDeselectOne={pondsSelection.handleDeselectOne}
               onPageChange={handlePageChange}
               onRowsPerPageChange={handleRowsPerPageChange}
-              onSelectAll={customersSelection.handleSelectAll}
-              onSelectOne={customersSelection.handleSelectOne}
+              onSelectAll={pondsSelection.handleSelectAll}
+              onSelectOne={pondsSelection.handleSelectOne}
               page={page}
               rowsPerPage={rowsPerPage}
-              selected={customersSelection.selected}
+              selected={pondsSelection.selected}
             />
           </Stack>
         </Container>

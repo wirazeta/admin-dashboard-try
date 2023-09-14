@@ -135,7 +135,7 @@ const Page = () => {
             <DevicesAdd setOpen={openModal}/>
             <DevicesTable
               count={data.length}
-              items={data}
+              items={devices}
               devices={devices.handleDeselectAll}
               onDeselectAll={devicesSelection.handleDeselectAll}
               onDeselectOne={devicesSelection.handleDeselectOne}
