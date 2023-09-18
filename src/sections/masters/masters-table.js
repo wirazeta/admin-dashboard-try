@@ -1,7 +1,9 @@
 import PropTypes from 'prop-types';
+import { useState } from 'react';
 import { format } from 'date-fns';
 import {
   Avatar,
+  Button,
   Box,
   Card,
   Checkbox,
@@ -16,6 +18,7 @@ import {
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { getInitials } from 'src/utils/get-initials';
+import {MastersUpdate} from './masters-update';
 
 export const MastersTable = (props) => {
   const {
@@ -32,8 +35,13 @@ export const MastersTable = (props) => {
     selected = []
   } = props;
 
+  const [openModal, setOpenModal] = useState(false);
+
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  }
 
   return (
     <Card>
@@ -98,6 +106,14 @@ export const MastersTable = (props) => {
                     <TableCell>
                       {master.simNumber}
                     </TableCell>
+                    <TableCell>
+                      <Button
+                        color='inherit'
+                        variant='text'
+                        onClick={handleOpenModal}
+                      >Update</Button>
+                    </TableCell>
+                    <MastersUpdate openModal={openModal} setOpenModal={setOpenModal} master={master}/>
                   </TableRow>
                 );
               })}
