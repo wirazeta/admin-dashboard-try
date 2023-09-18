@@ -8,8 +8,8 @@ import{
     TextField,
     Modal
 } from '@mui/material';
-// import { instance } from 'src/hooks/use-api';
-const axios = require('axios');
+import { instance } from 'src/hooks/use-api';
+// const axios = require('axios');
 
 const style = {
     position: 'absolute',
@@ -23,13 +23,8 @@ const style = {
     p: 4,
 };
 
-export const MastersAdd = (props) => {
+export const MastersAdd = ({ isOpen, setOpen }) => {
     const [data, setData] = useState({});
-    // const [closeModal, setCloseModal] = useState(true);
-    // const [file, setFile] = useState(undefined);
-    // const handleClose = () => {
-    //     setCloseModal(false);
-    // }
     const handleChange = (event) => {
         const { name, value } = event.target;
         setData(prevState => ({
@@ -39,42 +34,46 @@ export const MastersAdd = (props) => {
         console.log(data);
     }
 
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     const handleSubmit = () => {
 
-        axios({
-            method: 'post',
-            url: "http://www.devel-filkomub.site/masters",
-            data: data,
-            headers: {
-                "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
-            }
-        }).then((response) => {
-            console.log(response);
-        }).catch((error) => {
-            console.error.log(error);
-        })
-
-        // instance({
-        //     url: '/ponds',
-        //     method:'post',
-        //     body: formData,
+        // axios({
+        //     method: 'post',
+        //     url: "http://www.devel-filkomub.site/masters",
+        //     data: data,
         //     headers: {
-        //         "Content-Type": "multipart/form-data"
-        //     },
+        //         "Authorization": "Bearer c55395c467dc5f4d8caee3d6b53c5f17d4c24b28976bcf387f1b9feb563e",
+        //     }
         // }).then((response) => {
         //     console.log(response);
-        // });
+        // }).catch((error) => {
+        //     console.error.log(error);
+        // })
+
+        instance({
+            url: '/masters',
+            method:'post',
+            data: data,
+        }).then((response) => {
+            console.log(response);
+        }).catch((err) => {
+            console.error(err);
+        });
     };
 
     return(
         <div>
             <Modal
-                open={props.setOpen}
+                open={isOpen}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <form autoComplete='off' onSubmit={handleSubmit}>
+                    <form autoComplete='off'>
                         <h2>Add Master</h2>
                         <TextField
                             name="id"
@@ -101,7 +100,7 @@ export const MastersAdd = (props) => {
                             value={data.name}
                         />
                         <TextField
-                            name="simNum"
+                            name="simNumber"
                             label="Sim Number"
                             onChange={handleChange}
                             required
@@ -112,14 +111,10 @@ export const MastersAdd = (props) => {
                             fullWidth
                             value={data.simNum}
                         />
-                        <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Create</Button>
                     </form>
                 </Box>
             </Modal>
         </div>
     )
 }
-
-MastersAdd.propTypes = {
-    setOpen: PropTypes.bool,
-};

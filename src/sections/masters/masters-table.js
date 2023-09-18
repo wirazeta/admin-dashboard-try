@@ -96,7 +96,7 @@ export const MastersTable = (props) => {
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {master.simNum}
+                      {master.simNumber}
                     </TableCell>
                   </TableRow>
                 );

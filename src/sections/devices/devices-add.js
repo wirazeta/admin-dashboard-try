@@ -23,7 +23,7 @@ const style = {
     p: 4,
 };
 
-export const DevicesAdd = (props) => {
+export const DevicesAdd = ({ isOpen, setOpen }) => {
     const [data, setData] = useState({});
     const handleChange = (event) => {
         const { name, value } = event.target;
@@ -34,8 +34,11 @@ export const DevicesAdd = (props) => {
         console.log(data);
     }
 
+    const handleClose = () => {
+        setOpen(false);
+    }
+
     const handleSubmit = () => {
-        console.log(data);
         instance({
             method: 'post',
             url: "/devices",
@@ -50,12 +53,13 @@ export const DevicesAdd = (props) => {
     return(
         <div>
             <Modal
-                open={props.setOpen}
+                open={isOpen}
+                onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <form autoComplete='off' onSubmit={handleSubmit}>
+                    <form autoComplete='off'>
                         <h2>Add Device</h2>
                         <TextField
                             name="id"
@@ -93,14 +97,10 @@ export const DevicesAdd = (props) => {
                             fullWidth
                             value={data.masterId}
                         />
-                        <Button variant='outlined' color='secondary' type='submit' sx={{ mb : 3 }}>Create</Button>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Create</Button>
                     </form>
                 </Box>
             </Modal>
         </div>
     )
 }
-
-DevicesAdd.propTypes = {
-    setOpen: PropTypes.bool,
-};

@@ -132,7 +132,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <MastersAdd setOpen={openModal}/>
+            <MastersAdd isOpen={openModal} setOpen={setOpenModal}/>
             <MastersTable
               count={data.length}
               items={masters}

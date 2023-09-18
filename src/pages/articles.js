@@ -70,7 +70,7 @@ const Page = () => {
     <>
       <Head>
         <title>
-          Ponds | Devias Kit
+          Articles | Devias Kit
         </title>
       </Head>
       <Box
@@ -89,7 +89,7 @@ const Page = () => {
             >
               <Stack spacing={1}>
                 <Typography variant="h4">
-                  Ponds
+                  Articles
                 </Typography>
                 <Stack
                   alignItems="center"

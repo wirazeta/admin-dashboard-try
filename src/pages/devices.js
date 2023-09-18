@@ -132,7 +132,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <DevicesAdd setOpen={openModal}/>
+            <DevicesAdd isOpen={openModal} setOpen={setOpenModal} />
             <DevicesTable
               count={data.length}
               items={devices}

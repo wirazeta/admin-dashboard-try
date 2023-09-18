@@ -129,7 +129,7 @@ export const DevicesTable = (props) => {
                       </Stack>
                     </TableCell>
                     <TableCell>
-                      {device.notification}
+                      {device.notificationEnabled}
                     </TableCell>
                     <TableCell>
                       {device.tempHigh}

@@ -1,6 +1,6 @@
 const axios = require('axios');
 
-const token = "iniadalahkeabadianjiwadanragayangsakti";
+const token = "aksesiniuntukmuhambakuyangsetia";
 const instance = axios.create({
     baseURL:"http://www.devel-filkomub.site",
     headers: {
