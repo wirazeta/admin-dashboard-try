@@ -6,7 +6,10 @@ import{
     Typography,
     TextField,
     Modal,
-    Checkbox
+    Checkbox,
+    Select,
+    MenuItem,
+    FormControl
 } from '@mui/material';
 
 import { instance } from 'src/hooks/use-api';
@@ -22,6 +25,19 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+
+let users = [];
+
+instance({
+    url:'/users',
+    method:'get'
+}).then((response) => {
+    response.data.map((user) => {
+        users.push(user);
+    })
+}).catch((err) => {
+    console.log(err);
+})
 
 export const MastersUpdate = ({master, openModal, setOpenModal}) => {
     const [data, setData] = useState({name: master.name, simNumber: master.simNumber, userId: master.userId});
@@ -94,19 +110,25 @@ export const MastersUpdate = ({master, openModal, setOpenModal}) => {
                             value={data.address}
                         />
                         {/* <FormControlLabel control={<Checkbox name="userIdNull" onChange={handleUserId}/>} label="Null" /> */}
-                        <FormControlLabel control={<Checkbox name="userId" onChange={handleCheckBox}/>} label="Update User ID (Checked = Null)" />
-                        <TextField
-                            name="userId"
-                            placeholder="User ID"
-                            disabled={disable}
-                            onChange={handleChange}
-                            variant='outlined'
-                            color='secondary'
-                            type='text'
-                            sx={{mb: 3}}
-                            fullWidth
-                            // value={data.userId}
-                        />
+                        <FormControl sx={{m: 1, minWidth: 80}}>
+                            <FormControlLabel control={<Checkbox onChange={handleCheckBox}/>} label="Update User ID (Checked = Null)" />
+                            <Select
+                                id="user-select"
+                                autoWidth
+                                disabled={disable}
+                                label="User"
+                                // onChange={handleChange}
+                            >
+                                {
+                                    users.map((user) => {
+                                        {/* <>
+                                            <MenuItem value={user.id}>{user.name}</MenuItem>
+                                        </> */}
+                                        console.log(user.id)
+                                    })
+                                }
+                            </Select>
+                        </FormControl>                        
                         <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Update</Button>
                     </form>
                 </Box>
