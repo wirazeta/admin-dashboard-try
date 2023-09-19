@@ -3,7 +3,6 @@ import{
     Box,
     Button,
     FormControlLabel,
-    Typography,
     TextField,
     Modal,
     Checkbox,
@@ -41,7 +40,6 @@ instance({
 
 export const MastersUpdate = ({master, openModal, setOpenModal}) => {
     const [data, setData] = useState({name: master.name, simNumber: master.simNumber, userId: master.userId});
-    const [userId, setUserId] = useState();
     const [disable, setDisable] = useState(true);
     const handleChange = (event) => {
         const {name, value} = event.target;
@@ -109,27 +107,25 @@ export const MastersUpdate = ({master, openModal, setOpenModal}) => {
                             fullWidth
                             value={data.address}
                         />
-                        {/* <FormControlLabel control={<Checkbox name="userIdNull" onChange={handleUserId}/>} label="Null" /> */}
-                        <FormControl sx={{m: 1, minWidth: 80}}>
-                            <FormControlLabel control={<Checkbox onChange={handleCheckBox}/>} label="Update User ID (Checked = Null)" />
+                        <FormControl sx={{mb: 3}} fullWidth>
+                            <FormControlLabel control={<Checkbox onChange={handleCheckBox}/>} label="Update User (Checked = Null)" />
                             <Select
                                 id="user-select"
+                                name="userId"
                                 autoWidth
                                 disabled={disable}
-                                label="User"
-                                // onChange={handleChange}
+                                onChange={handleChange}
                             >
                                 {
                                     users.map((user) => {
-                                        {/* <>
-                                            <MenuItem value={user.id}>{user.name}</MenuItem>
-                                        </> */}
-                                        console.log(user.id)
+                                        return(
+                                            <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
+                                        )
                                     })
                                 }
                             </Select>
                         </FormControl>                        
-                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }}>Update</Button>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb : 3 }} type='submit'>Update</Button>
                     </form>
                 </Box>
             </Modal>
