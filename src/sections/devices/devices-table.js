@@ -1,7 +1,8 @@
+import {useState} from 'react';
 import PropTypes from 'prop-types';
 import { format } from 'date-fns';
 import {
-  Avatar,
+  Button,
   Box,
   Card,
   Checkbox,
@@ -15,6 +16,7 @@ import {
   Typography
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
+import { DevicesUpdate } from './devices-update';
 import { getInitials } from 'src/utils/get-initials';
 
 export const DevicesTable = (props) => {
@@ -31,9 +33,13 @@ export const DevicesTable = (props) => {
     rowsPerPage = 0,
     selected = []
   } = props;
-
+  const [openModal, setOpenModal] = useState(false);
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
   const selectedAll = (items.length > 0) && (selected.length === items.length);
+
+  const handleOpenModal = () => {
+    setOpenModal(true);
+  }
 
   return (
     <Card>
@@ -164,6 +170,14 @@ export const DevicesTable = (props) => {
                     <TableCell>
                       {device.masterId}
                     </TableCell>
+                    <TableCell>
+                      <Button
+                        color='inherit'
+                        variant='text'
+                        onClick={handleOpenModal}
+                      >Update</Button>
+                    </TableCell>
+                    <DevicesUpdate openModal={openModal} setOpenModal={setOpenModal} device={device}/>
                   </TableRow>
                 );
               })}

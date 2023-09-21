@@ -115,6 +115,7 @@ export const MastersUpdate = ({master, openModal, setOpenModal}) => {
                                 autoWidth
                                 disabled={disable}
                                 onChange={handleChange}
+                                data
                             >
                                 {
                                     users.map((user) => {

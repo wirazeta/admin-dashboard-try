@@ -119,7 +119,7 @@ const Page = () => {
                 </Stack>
               </Stack>
               <div>
-                <Button
+                {/* <Button
                   startIcon={(
                     <SvgIcon fontSize="small">
                       <PlusIcon />
@@ -129,7 +129,7 @@ const Page = () => {
                   onClick={handleOpenModal}
                 >
                   Add
-                </Button>
+                </Button> */}
               </div>
             </Stack>
             <PondsAdd isOpen={openModal} setOpen={setOpenModal}/>
