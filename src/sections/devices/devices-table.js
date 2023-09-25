@@ -31,7 +31,8 @@ export const DevicesTable = (props) => {
     onSelectOne,
     page = 0,
     rowsPerPage = 0,
-    selected = []
+    selected = [],
+    fetchDevices
   } = props;
   const [openModal, setOpenModal] = useState(false);
   const selectedSome = (selected.length > 0) && (selected.length < items.length);
@@ -177,7 +178,7 @@ export const DevicesTable = (props) => {
                         onClick={handleOpenModal}
                       >Update</Button>
                     </TableCell>
-                    <DevicesUpdate openModal={openModal} setOpenModal={setOpenModal} device={device}/>
+                    <DevicesUpdate openModal={openModal} setOpenModal={setOpenModal} device={device} fetchDevices={fetchDevices}/>
                   </TableRow>
                 );
               })}
@@ -209,5 +210,6 @@ DevicesTable.propTypes = {
   onSelectOne: PropTypes.func,
   page: PropTypes.number,
   rowsPerPage: PropTypes.number,
-  selected: PropTypes.array
+  selected: PropTypes.array,
+  fetchDevices: PropTypes.func
 };

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState, useEffect } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -13,34 +13,35 @@ import { ArticlesAdd } from 'src/sections/articles/articles-add';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { instance } from 'src/hooks/use-api';
 
-let data = [];
-
-instance({
-  url: '/articles',
-  method: 'get'
-}).then((response) => {
-  data = response.data;
-});
-
-const useArticles = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
-
-const useArticleIds = (articles) => {
-  return useMemo(
-    () => {
-      return articles.map((article) => article.id);
-    },
-    [articles]
-  );
-};
-
 const Page = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async() => {
+      const response = await instance.get('/articles');
+      setData(response.data);
+    }
+    fetchData();
+  },[]);
+
+  const useArticles = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(data, page, rowsPerPage);
+      },
+      [page, rowsPerPage]
+    );
+  };
+
+  const useArticleIds = (articles) => {
+    return useMemo(
+      () => {
+        return articles.map((article) => article.id);
+      },
+      [articles]
+    );
+  };
+
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -132,7 +133,7 @@ const Page = () => {
                 </Button>
               </div>
             </Stack>
-            <ArticlesAdd isOpen={openModal} setOpen={setOpenModal}/>
+            <ArticlesAdd isOpen={openModal} setOpen={setOpenModal} />
             <ArticlesSearch />
             <ArticlesTable
               count={data.length}

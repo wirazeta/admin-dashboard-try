@@ -18,10 +18,10 @@ export const items = [
       </SvgIcon>
     )
   },
-  {
-    title: 'Ponds',
-    path: '/ponds',
-  },
+  // {
+  //   title: 'Ponds',
+  //   path: '/ponds',
+  // },
   {
     title: 'Masters',
     path: '/masters'

@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useEffect, useCallback, useMemo, useState } from 'react';
 import Head from 'next/head';
 import { subDays, subHours } from 'date-fns';
 import ArrowDownOnSquareIcon from '@heroicons/react/24/solid/ArrowDownOnSquareIcon';
@@ -8,39 +8,43 @@ import { Box, Button, Container, Stack, SvgIcon, Typography } from '@mui/materia
 import { useSelection } from 'src/hooks/use-selection';
 import { Layout as DashboardLayout } from 'src/layouts/dashboard/layout';
 import { DevicesTable } from 'src/sections/devices/devices-table';
-// import { MastersSearch } from 'src/sections/devices/devices-search';
 import { DevicesAdd } from 'src/sections/devices/devices-add';
 import { applyPagination } from 'src/utils/apply-pagination';
 import { instance } from 'src/hooks/use-api';
 
-let data = [];
-
-instance({
-  url: '/devices',
-  method: 'get'
-}).then((response) => {
-  data = response.data;
-});
-
-const useDevices = (page, rowsPerPage) => {
-  return useMemo(
-    () => {
-      return applyPagination(data, page, rowsPerPage);
-    },
-    [page, rowsPerPage]
-  );
-};
-
-const useDevicesIds = (devices) => {
-  return useMemo(
-    () => {
-      return devices.map((device) => device.id);
-    },
-    [devices]
-  );
-};
-
 const Page = () => {
+  const [data, setData] = useState([]);
+
+  const fetchData = async () => {
+    const response = await instance.get('/devices');
+    setData(response.data);
+    console.log("Halo orang-orang bodoh, yg ngoding gk jelas")
+  }
+
+  useEffect(() => { 
+    fetchData();
+  },[]);
+
+  console.log(data);
+
+  const useDevices = (page, rowsPerPage) => {
+    return useMemo(
+      () => {
+        return applyPagination(data, page, rowsPerPage);
+      },
+      [page, rowsPerPage]
+    );
+  };
+
+  const useDevicesIds = (devices) => {
+    return useMemo(
+      () => {
+        return devices.map((device) => device.id);
+      },
+      [devices]
+    );
+  };
+  
   const [page, setPage] = useState(0);
   const [openModal, setOpenModal] = useState(false);
   const [rowsPerPage, setRowsPerPage] = useState(5);
@@ -146,6 +150,7 @@ const Page = () => {
               page={page}
               rowsPerPage={rowsPerPage}
               selected={devicesSelection.selected}
+              fetchDevices={fetchData}
             />
           </Stack>
         </Container>

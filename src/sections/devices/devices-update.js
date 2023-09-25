@@ -1,12 +1,11 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
     Box,
     Button,
     FormControlLabel,
+    InputLabel,
     TextField,
     Modal,
-    Grid,
-    Checkbox,
     Select,
     Switch,
     MenuItem,
@@ -14,21 +13,9 @@ import {
 } from '@mui/material';
 import { Scrollbar } from 'src/components/scrollbar';
 import { instance } from 'src/hooks/use-api';
-
-const modalStyle = theme => ({
-    modalStyle1:{
-        position:'absolute',
-        top:'10%',
-        left:'10%',
-        overflow:'scroll',
-        height:'100%',
-        display:'block'
-    }
-});
-
 const style = {
     position: 'absolute',
-    top: '50%',
+    top: '85%',
     left: '50%',
     transform: 'translate(-50%, -50%)',
     width: 400,
@@ -38,49 +25,43 @@ const style = {
     p: 4,
 };
 
-let users = [];
-let masters = [];
-
-instance({
-    url: '/users',
-    method: 'get'
-}).then((response) => {
-    response.data.map((user) => {
-        users.push(user);
-    })
-}).catch((err) => {
-    console.log(err);
-});
-
-instance({
-    url: '/masters',
-    method: 'get'
-}).then((response) => {
-    response.data.map((master) => {
-        masters.push(master);
-    });
-});
-
-export const DevicesUpdate = ({ device, openModal, setOpenModal }) => {
+export const DevicesUpdate = ({ device, openModal, setOpenModal, fetchDevices }) => {
     const [data, setData] = useState({
-        name: device.name,
-        notificationEnabled: device.notificationEnabled,
-        tempLow: device.tempLow,
-        tempHigh: device.tempHigh,
-        phLow: device.phLow,
-        phHigh: device.phHigh,
-        tdoLow: device.tdoLow,
-        tdoHigh: device.tdoHigh,
-        tdsLow: device.tdsLow,
-        tdsHigh: device.tdsHigh,
-        turbiditiesLow: device.turbiditiesLow,
-        turbiditiesHigh: device.turbiditiesHigh,
-        userId: device.userId,
-        masterId: device.masterId
+        // name: device.name,
+        // notificationEnabled: device.notificationEnabled,
+        // tempLow: device.tempLow,
+        // tempHigh: device.tempHigh,
+        // phLow: device.phLow,
+        // phHigh: device.phHigh,
+        // tdoLow: device.tdoLow,
+        // tdoHigh: device.tdoHigh,
+        // tdsLow: device.tdsLow,
+        // tdsHigh: device.tdsHigh,
+        // turbiditiesLow: device.turbiditiesLow,
+        // turbiditiesHigh: device.turbiditiesHigh,
+        // userId: device.userId,
+        // masterId: device.masterId
     });
-    const [disable, setDisable] = useState(true);
+    const [users, setUser] = useState([]);
+    const [masters, setMaster] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const responseUser = await instance.get('/users');
+            const responseMaster = await instance.get('/masters');
+
+            setUser(responseUser.data);
+            setMaster(responseMaster.data);
+        }
+        fetchData();
+    },[]);
+
+    console.log(users);
+    console.log(masters);
+
     const handleChange = (event) => {
         const { name, value } = event.target;
+        console.log(`${name} : ${value}`);
         setData(prevState => ({
             ...prevState,
             [name]: value
@@ -88,30 +69,28 @@ export const DevicesUpdate = ({ device, openModal, setOpenModal }) => {
         console.log(data);
     }
 
+    const handleSwitch = (event) => {
+        if (event.target.checked === true) {
+            setData({ notificationEnabled: 1 });
+        } else {
+            setData({ notificationEnabled: 0 });
+        }
+    }
+
     const handleClose = () => {
         setOpenModal(false);
     }
 
-    const handleCheckBox = (event) => {
-        const { name } = event.target;
-        const { } = device;
-        if (event.target.checked === true) {
-            setDisable(false);
-            setData({ [event.target.name]: null });
-        } else {
-            setDisable(true);
-            setData({ [name]: device });
-        }
-    }
-
     const handleSubmit = async () => {
         console.log(data);
-        instance({
+        await instance({
+            method: 'patch',
             url: `/devices/${device.id}`,
-            method: "patch",
             data: data
         }).then((response) => {
             console.log(response);
+            setOpenModal(false);
+            fetchDevices();
         });
     }
 
@@ -120,184 +99,184 @@ export const DevicesUpdate = ({ device, openModal, setOpenModal }) => {
             <Modal
                 open={openModal}
                 onClose={handleClose}
-                className={modalStyle.modalStyle1}
+                style={{ overflow: 'scroll' }}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
                 <Box sx={style}>
-                    <Grid container spacing={2}>
-                        <form autoComplete='off'>
-                            <h2>Update Master</h2>
-                            <Grid item xs={6}>
-                                <TextField
-                                    name="name"
-                                    label="Name"
-                                    onChange={handleChange}
-                                    variant='outlined'
-                                    color='secondary'
-                                    type='text'
-                                    sx={{ mb: 3 }}
-                                    fullWidth
-                                    value={data.name}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <Switch
-                                    name="notificationEnabled"
-                                    label="Notification"
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    name="tempLow"
-                                    label="Temp Low"
-                                    onChange={handleChange}
-                                    variant='outlined'
-                                    color='secondary'
-                                    type='number'
-                                    sx={{ mb: 3 }}
-                                    fullWidth
-                                    value={data.tempLow}
-                                />
-                            </Grid>
-                            <Grid item xs={6}>
-                                <TextField
-                                    name="tempHigh"
-                                    label="Temp High"
-                                    onChange={handleChange}
-                                    variant='outlined'
-                                    color='secondary'
-                                    type='number'
-                                    sx={{ mb: 3 }}
-                                    fullWidth
-                                    value={data.tempHigh}
-                                />
-                            </Grid>
-                            <TextField
-                                name="phLow"
-                                label="pH Low"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
+                    <form autoComplete='off' onSubmit={handleSubmit}>
+                        <h2>Update Master</h2>
+                        <TextField
+                            name="name"
+                            label="Name"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='text'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.name}
+                        />
+                        <FormControl>
+                            <FormControlLabel
+                                control={<Switch onChange={handleSwitch} />}
+                                label="Notification"
                                 sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.phLow}
                             />
-                            <TextField
-                                name="phHigh"
-                                label="pH High"
+                        </FormControl>
+                        <TextField
+                            name="tempHigh"
+                            label="Temp High"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tempHigh}
+                        />
+                        <TextField
+                            name="tempLow"
+                            label="Temp Low"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tempLow}
+                        />
+                        <TextField
+                            name="phLow"
+                            label="pH Low"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.phLow}
+                        />
+                        <TextField
+                            name="phHigh"
+                            label="pH High"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.phHigh}
+                        />
+                        <TextField
+                            name="tdoLow"
+                            label="TDO Low"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tdoLow}
+                        />
+                        <TextField
+                            name="tdoHigh"
+                            label="TDO High"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tdoHigh}
+                        />
+                        <TextField
+                            name="tdsLow"
+                            label="TDS Low"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tdsLow}
+                        />
+                        <TextField
+                            name="tdsHigh"
+                            label="TDS High"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.tdsHigh}
+                        />
+                        <TextField
+                            name="turbiditiesLow"
+                            label="Turbidities Low"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.turbiditiesLow}
+                        />
+                        <TextField
+                            name="turbiditiesHigh"
+                            label="Turbidities High"
+                            onChange={handleChange}
+                            variant='outlined'
+                            color='secondary'
+                            type='number'
+                            sx={{ mb: 3 }}
+                            fullWidth
+                            value={data.turbiditiesHigh}
+                        />
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-sample-select-label">User</InputLabel>
+                            <Select
+                                id="user-select"
+                                name="userId"
+                                label="User"
                                 onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
+                                value={data.userId}
                                 sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.phHigh}
-                            />
-                            <TextField
-                                name="tdoLow"
-                                label="TDO Low"
+                            >
+                                {
+                                    users.map((user) => {
+                                        return (
+                                            <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
+                                        )
+                                    })
+                                }
+                                <MenuItem value={null}>Null</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-sample-select-label">Master</InputLabel>
+                            <Select
+                                id="user-select"
+                                name="masterId"
+                                label="Master"
                                 onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
+                                value={data.masterId}
                                 sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.tdoLow}
-                            />
-                            <TextField
-                                name="tdoHigh"
-                                label="TDO High"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
-                                sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.tdoHigh}
-                            />
-                            <TextField
-                                name="tdsLow"
-                                label="TDS Low"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
-                                sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.tdsLow}
-                            />
-                            <TextField
-                                name="tdsHigh"
-                                label="TDS High"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
-                                sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.tdsHigh}
-                            />
-                            <TextField
-                                name="turbiditiesLow"
-                                label="Turbidities Low"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
-                                sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.turbiditiesLow}
-                            />
-                            <TextField
-                                name="turbiditiesHigh"
-                                label="Turbidities High"
-                                onChange={handleChange}
-                                variant='outlined'
-                                color='secondary'
-                                type='number'
-                                sx={{ mb: 3 }}
-                                fullWidth
-                                value={data.turbiditiesHigh}
-                            />
-                            <FormControl sx={{ mb: 3 }} fullWidth>
-                                <Select
-                                    id="user-select"
-                                    name="userId"
-                                    autoWidth
-                                    disabled={disable}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        users.map((user) => {
-                                            return (
-                                                <MenuItem key={user.id} value={user.id}>{user.name}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                    <MenuItem value={null}>Null</MenuItem>
-                                </Select>
-                                <Select
-                                    id="user-select"
-                                    name="masterId"
-                                    autoWidth
-                                    disabled={disable}
-                                    onChange={handleChange}
-                                >
-                                    {
-                                        masters.map((master) => {
-                                            return (
-                                                <MenuItem key={master.id} value={master.id}>{master.name}</MenuItem>
-                                            )
-                                        })
-                                    }
-                                    <MenuItem value={null}>Null</MenuItem>
-                                </Select>
-                            </FormControl>
-                            <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb: 3 }} type='submit'>Update</Button>
-                        </form>
-                    </Grid>
+                            >
+                                {
+                                    masters.map((master) => {
+                                        console.log(master);
+                                        return (
+                                            <MenuItem key={master.id} value={master.id}>{master.name}</MenuItem>
+                                        )
+                                    })
+                                }
+                                <MenuItem value={null}>Null</MenuItem>
+                            </Select>
+                        </FormControl>
+                        <Button variant='outlined' color='secondary' onClick={handleSubmit} sx={{ mb: 3 }}>Update</Button>
+                    </form>
                 </Box>
             </Modal>
         </Scrollbar>
